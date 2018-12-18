@@ -5,7 +5,12 @@
 cd ..
 make
 cd test
-
+if [[ ! -f "../bin/main" ]]; then
+	echo "Can not find the bin/main!"
+	exit -1
+else
+	echo "Find the bin/main."
+fi
 let cnt=0;
 for i in {1..4}
 do
