@@ -7,7 +7,7 @@ make
 cd test
 
 let cnt=0;
-for i in {1..3}
+for i in {1..4}
 do
 		let cnt+=1;
 		echo "Running on $cnt tests."
