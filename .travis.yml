@@ -1,0 +1,7 @@
+language: cpp
+sudo: true
+compiler: gcc
+
+script: 
+- cd test
+- sudo bash ./test.sh
