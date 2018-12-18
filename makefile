@@ -3,8 +3,7 @@ DIR_BIN = ./bin
 DIR_OBJ = ./obj
 
 CC = g++
-CFLAGSDEBUG = -g -Wall -Wextra -Wshadow
-CFLAGS = -o2
+CFLAGS = -o2 -Wall -Wextra -Wshadow -std=gnu++14 
 
 TARGET = main
 BIN_TARGET = $(DIR_BIN)/$(TARGET)
