@@ -40,7 +40,19 @@ void input( const string &filename , vector<string> *data)
 		}
 		string s;
 		while( fin >> s )
+		{
+				// pretreat the url to unify the URL
+				transform(s.begin(),s.end(), s.begin(),::tolower);
+				if( s.substr( 0 , 4 ).find("http") != string::npos)
+						s.erase(0,5);
+				while( s[0] == '/' || s[0] == ':'  )
+						s.erase(s.begin());
+				if( s.substr(0,4).find("www.") != string::npos)
+						s.erase(0,4);
+				if( s[s.size()-1] != '/')
+						s.push_back('/');
 				data->push_back(s);
+		}
 }
 
 void solve( vector<string> *data )
