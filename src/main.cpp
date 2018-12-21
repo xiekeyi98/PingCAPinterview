@@ -10,6 +10,7 @@ using namespace std;
 
 int input( const string &filename);
 void output( const int max_size ) ;
+void solve();
 
 int main(int argc , char **argv)
 {
@@ -20,12 +21,13 @@ int main(int argc , char **argv)
 		}
 
 		string 	filename = argv[1];
-		system("rm --force  tmp/*");
-		system("mkdir -p tmp");
+		system("rm --force  ./tmp/*");
+		system("mkdir -p ./tmp");
 		// input file;
 		int max_file = 	input(filename);
 		output(max_file);
-		system("rm -rf tmp/");
+		solve();
+		system("rm -rf ./tmp/");
 }
 
 unsigned long long has( const string &s )
@@ -64,7 +66,7 @@ int input( const string &filename)
 				res = max( res , has_s);
 				ofstream tmpout;
 				tmpout.open(string("./tmp/tmp") + to_string(has_s) + string(".in") , ios::app );
-				tmpout << s;
+				tmpout << s << endl ;
 		}
 		return res; 
 }
@@ -79,7 +81,7 @@ void output( const int max_size )
 				if( !fin.is_open() )
 						continue;
 				string s ;
-				map<string,int> mp;
+				map<string,int> mp; //TODO 
 				while( fin >> s )
 						mp[s]++;
 				ofstream fout(output_name , ios::app);
@@ -108,6 +110,14 @@ void solve()
 				pq.pop();
 		}
 		reverse(ans.begin(),ans.end());
+		sort(ans.begin(),ans.end(),[](const pair<string,int> &a , const pair<string,int> &b)
+						{
+						if( a.second == b.second )
+						return a.first > b.first;
+						else
+						return a.second > b.second ;
+						}
+			);
 		for( auto i : ans )
 				cout << i.first << ' ' << i.second  << endl ;
 }
