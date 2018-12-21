@@ -17,22 +17,23 @@ int main(int argc , char **argv)
 
 		string input = argv[1];
 		string ans = argv[2] ;
-		fstream fin(input) , fans(ans);
+		ifstream fin,fans;
+		fin.open(input);
+		fans.open(ans);
 		map<string,int> mp;
 		string tmp_string ; 
 		while( fin >> tmp_string)
 		{
 				// pretreat the url to unify the URL
-				auto &s = tmp_string;
-				transform(s.begin(),s.end(), s.begin(),::tolower);
-				if( s.substr( 0 , 4 ).find("http") != string::npos)
-						s.erase(0,5);
-				while( s[0] == '/' || s[0] == ':'  )
-						s.erase(s.begin());
-				if( s.substr(0,4).find("www.") != string::npos)
-						s.erase(0,4);
-				if( s[s.size()-1] != '/')
-						s.push_back('/');
+				transform(tmp_string.begin(),tmp_string.end(), tmp_string.begin(),::tolower);
+				if( tmp_string.substr( 0 , 4 ).find("http") != string::npos)
+						tmp_string.erase(0,5);
+				while( tmp_string[0] == '/' || tmp_string[0] == ':'  )
+						tmp_string.erase(tmp_string.begin());
+				if( tmp_string.substr(0,4).find("www.") != string::npos)
+						tmp_string.erase(0,4);
+				if( tmp_string[tmp_string.size()-1] != '/')
+						tmp_string.push_back('/');
 				mp[tmp_string]++;
 		}
 		int last = 0x3f3f3f3f;

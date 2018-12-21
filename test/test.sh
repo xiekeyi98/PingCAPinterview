@@ -5,7 +5,8 @@
 cd ..
 make
 cd test
-g++ judger.cpp -O2 -o judger
+g++ judger.cpp -O2  -std=gnu++11 -o judger
+g++ gen.cpp -O2 -std=gnu++11 -o  gen
 if [[ ! -f "../bin/main" ]]; then
 		echo "Can not find the bin/main!"
 		exit -1
@@ -44,17 +45,16 @@ do
 		fi
 done
 
-g++ gen.cpp -O2 -o gen
 for i in {1..10}
 do
 		let cnt+=1;
 		echo "Running on $cnt tests."
 		# generate the random strings
-		echo "generating $i test"
+		echo "generating $cnt test"
 		let size=$i*150
 		./gen $size > tmp.in
-		echo "$i test generating completed "
-		datasize=$(du -m test$i.in | awk '{print $1}');
+		echo "$cnt test generating completed "
+		datasize=$(du -m tmp.in | awk '{print $1}');
 		echo "the input size is (MByte)  : $datasize";
 		# test the random strings
 		/usr/bin/time -v ../bin/main tmp.in 1> ans.out 2>tmp.out
