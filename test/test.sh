@@ -71,7 +71,7 @@ do
 				fi
 		fi
 		ans=$(cat tmp.out | grep 'Maximum resident set size (kbytes):' | tr -cd "[0-9]")
-		let ans=ans/1024; # Mb
+		let ans=$ans/1024; # Mb
 		echo "Maxmimun resident set size (Mbytes):$ans"
 		if [[ $ans -gt 1024 ]];
 		then
