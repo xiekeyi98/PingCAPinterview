@@ -81,7 +81,7 @@ void output( const int max_size )
 				if( !fin.is_open() )
 						continue;
 				string s ;
-				map<string,int> mp; //TODO unordered_map
+				unordered_map<string,int> mp; 
 				while( fin >> s )
 						mp[s]++;
 				ofstream fout(output_name , ios::app);
