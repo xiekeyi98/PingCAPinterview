@@ -1,16 +1,16 @@
 /**********************************************************
  * Author        : xie keyi
  * Email         : xiekeyi98@snnu.edu.cn
- * Last modified : 2018-12-18 16:16
- * Filename      : main.cpp
- * Description   : 
+ * Last modified : 2018-12-19 21:39
+ * Filename      : main.cpp * Description   : 
  * *******************************************************/
 #include<bits/stdc++.h>
 using namespace std;
 
 
-void input( const string &filename , vector<string> *data);
-void solve( vector<string> *data );
+int input( const string &filename);
+void output( const int max_size ) ;
+void solve();
 
 int main(int argc , char **argv)
 {
@@ -21,17 +21,28 @@ int main(int argc , char **argv)
 		}
 
 		string 	filename = argv[1];
-		auto *data = new vector<string> ; 
+		system("rm --force  ./tmp/*");
+		system("mkdir -p ./tmp");
 		// input file;
-		input(filename , data);
-		solve(data);
-		delete data;
+		int max_file = 	input(filename);
+		output(max_file);
+		solve();
+		system("rm -rf ./tmp/");
 }
 
-
-void input( const string &filename , vector<string> *data)
+unsigned long long has( const string &s )
 {
-		fstream fin;
+		const unsigned long long BASE = 1000000000ull + 7ull;
+		unsigned long long ans = 0 ; 
+		for( int i = 0 ; i < s.size() ; i++)
+				ans = ans * BASE + s[i];
+		return ans;
+}
+
+int input( const string &filename)
+{
+		int res = 0 ; 
+		ifstream fin;
 		fin.open(filename);
 		if( !fin.is_open() )
 		{
@@ -40,27 +51,75 @@ void input( const string &filename , vector<string> *data)
 		}
 		string s;
 		while( fin >> s )
-				data->push_back(s);
+		{
+				// pretreat the url to unify the URL
+				transform(s.begin(),s.end(), s.begin(),::tolower);
+				if( s.substr( 0 , 4 ).find("http") != string::npos)
+						s.erase(0,5);
+				while( s[0] == '/' || s[0] == ':'  )
+						s.erase(s.begin());
+				if( s.substr(0,4).find("www.") != string::npos)
+						s.erase(0,4);
+				if( s[s.size()-1] != '/')
+						s.push_back('/');
+				int has_s = has(s) % 500;
+				res = max( res , has_s);
+				ofstream tmpout;
+				tmpout.open(string("./tmp/tmp") + to_string(has_s) + string(".in") , ios::app );
+				tmpout << s << endl ;
+		}
+		return res; 
 }
 
-void solve( vector<string> *data )
+void output( const int max_size ) 
 {
-		auto *mp = new map<string,int>;
-		// use map to mapping <url,occurrence number> 
-		for( auto i : *data )
-				((*mp)[i])++;
-		auto *ans = new vector< pair<string,int> > ;
-		// save the result and sort by occurrence number 
-		for( auto i : *mp )
-				ans->push_back(make_pair(i.first,i.second));
-		sort( ans->begin() , ans->end() , [](const pair<string,int> &a , const pair<string,int> &b)
+		string output_name = "./tmp/tmp.in" ; // save all the counts 
+		for( int i = 0 ; i <= max_size; i++)
+		{
+				string input_name = string("./tmp/tmp") + to_string(i) + string(".in") ;
+				ifstream fin(input_name);
+				if( !fin.is_open() )
+						continue;
+				string s ;
+				unordered_map<string,int> mp; 
+				while( fin >> s )
+						mp[s]++;
+				ofstream fout(output_name , ios::app);
+				for( auto i : mp )
+						fout << i.first << ' ' << i.second << endl ;
+		}
+}
+
+void solve()
+{
+		ifstream fin("./tmp/tmp.in");
+		string s ;
+		int cnt ;
+		priority_queue< pair<int,string> , vector< pair<int,string> > , greater< pair<int,string> > > pq;
+		while( fin >> s >> cnt )
+		{
+				pq.push(make_pair(cnt,s) );
+				while( pq.size() > 100 )
+						pq.pop();
+		}
+
+		vector<pair<string,int>> ans ;
+		while( !pq.empty() )
+		{
+				ans.push_back( make_pair( pq.top().second , pq.top().first ) ) ;
+				pq.pop();
+		}
+		reverse(ans.begin(),ans.end());
+		sort(ans.begin(),ans.end(),[](const pair<string,int> &a , const pair<string,int> &b)
 						{
-						return a.second > b.second;
+						if( a.second == b.second )
+						return a.first > b.first;
+						else
+						return a.second > b.second ;
 						}
 			);
-		delete mp ;
-		// output the num 
-		for( int i = 0 ; i <= 100 && i < ans->size() ; i++)
-				cout << ans->at(i).first << ' ' << ans->at(i).second << endl ;
-		delete ans ;
+		for( auto i : ans )
+				cout << i.first << ' ' << i.second  << endl ;
 }
+						
+
